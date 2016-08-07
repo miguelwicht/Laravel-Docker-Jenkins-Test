@@ -1,0 +1,24 @@
+version: '2'
+
+services:
+    web:
+        build: .
+        depends_on:
+            - mysql
+        links:
+            - mysql
+        volumes:
+            - ./src:/var/www/html
+            - ./mnt/logs:/var/www/logs
+        ports:
+            - 8080:80
+
+    mysql:
+        image: mysql:5.6
+        environment:
+              MYSQL_ROOT_PASSWORD: password
+              MYSQL_DATABASE: database
+        volumes:
+            - ./mnt/mysql:/var/lib/mysql
+        ports:
+            - 3307:3306
