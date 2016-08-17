@@ -22,3 +22,7 @@ COPY misc/apache/vhosts/default-ssl.conf /etc/apache2/sites-available/
 
 RUN a2ensite 000-default
 RUN a2ensite default-ssl
+
+# Create directory for apache logs
+RUN mkdir /var/www/logs \
+    && chown www-data:www-data /var/www/logs
