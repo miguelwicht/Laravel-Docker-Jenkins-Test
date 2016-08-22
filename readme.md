@@ -28,3 +28,13 @@ docker run --rm -v "$(pwd)":/app composer/composer:php5 create-project --prefer-
 docker run --rm -v "$(pwd)":"/app" -w="/app" node npm install
 docker run --rm -v "$(pwd)":"/app" -w="/app" node node_modules/.bin/gulp
 ```
+
+For convenience you can use the composer.sh and node.sh scripts. Just make sure they are executable.
+
+```
+# composer.sh
+./composer.sh "create-project --prefer-dist laravel/laravel ."
+
+# node.sh
+./node.sh "npm install"
+```
