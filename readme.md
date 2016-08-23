@@ -11,7 +11,10 @@ Simple template for an Apache, PHP, mysql setup. Mounts mysql data directory and
 - If necessary change the port mapping in ```.env```
 - run ```docker-compose up -d```
 
-## Composer and NPM
+### Custom php.ini settings
+php.ini settings can be overwritten in ```mnt/php/php.ini```. The container has to be restarted for the settings to take effect.
+
+### Composer and NPM
 
 Composer and npm are not included in this image but you can use the official images.
 
