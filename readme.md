@@ -16,13 +16,14 @@ Simple template for an Apache, PHP, mysql setup. Mounts mysql data directory and
 Composer and npm are not included in this image but you can use the official images.
 
 ```
-# Change into the src directory
+# Change into the src directory (all other commands are called from there!)
 cd src/
 
 # Composer
 docker run --rm -v "$(pwd)":/app composer/composer:php5 composer-command-to-run
 
 ## Laravel installation as an example (installs laravel in the current folder)
+rm -rf .gitkeep
 docker run --rm -v "$(pwd)":/app composer/composer:php5 create-project --prefer-dist laravel/laravel .
 
 # NPM and Gulp
