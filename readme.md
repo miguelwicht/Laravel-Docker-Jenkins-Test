@@ -6,8 +6,9 @@ Simple template for an Apache, PHP, mysql setup. Mounts mysql data directory and
 
 - Copy your project files into ```/src```
 - Change the Virtual Hosts in ```/misc/apache/vhosts``` to fit your needs
-- Change the mysql password and database in ```docker-compose.yml```
-- If necessary change the port mapping in ```docker-compose.yml```
+- Rename ```.env.example``` to ```.env```
+- Change the mysql password and database in ```.env```
+- If necessary change the port mapping in ```.env```
 - run ```docker-compose up -d```
 
 ## Composer and NPM
