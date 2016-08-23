@@ -23,15 +23,15 @@ Composer and npm are not included in this image but you can use the official ima
 cd src/
 
 # Composer
-docker run --rm -v "$(pwd)":/app composer/composer:php5 composer-command-to-run
+docker run --rm -v "$(pwd):/app" composer/composer:php5 composer-command-to-run
 
 ## Laravel installation as an example (installs laravel in the current folder)
 rm -rf .gitkeep
-docker run --rm -v "$(pwd)":/app composer/composer:php5 create-project --prefer-dist laravel/laravel .
+docker run --rm -v "$(pwd):/app" composer/composer:php5 create-project --prefer-dist laravel/laravel .
 
 # NPM and Gulp
-docker run --rm -v "$(pwd)":"/app" -w="/app" node npm install
-docker run --rm -v "$(pwd)":"/app" -w="/app" node node_modules/.bin/gulp
+docker run --rm -v "$(pwd):/app" -w="/app" node npm install
+docker run --rm -v "$(pwd):/app" -w="/app" node node_modules/.bin/gulp
 ```
 
 For convenience you can use the composer.sh and node.sh scripts. Just make sure they are executable.
