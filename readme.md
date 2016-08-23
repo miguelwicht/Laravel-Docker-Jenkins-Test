@@ -5,14 +5,14 @@ Simple template for an Apache, PHP, mysql setup. Mounts mysql data directory and
 ## How to use
 
 - Copy your project files into ```/src```
-- Change the Virtual Hosts in ```/misc/apache/vhosts``` to fit your needs
+- Change the Virtual Hosts in ```/mnt/apache2/vhosts``` to fit your needs
 - Rename ```.env.example``` to ```.env```
 - Change the mysql password and database in ```.env```
 - If necessary change the port mapping in ```.env```
 - run ```docker-compose up -d```
 
 ### Custom php.ini settings
-php.ini settings can be overwritten in ```mnt/php/php.ini```. The container has to be restarted for the settings to take effect.
+php.ini settings can be overwritten in ```/mnt/php/php.ini```. The container has to be restarted for the settings to take effect.
 
 ### Composer and NPM
 

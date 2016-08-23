@@ -11,6 +11,8 @@ services:
             - ./src:/var/www/html
             - ./mnt/logs:/var/www/logs
             - ./mnt/php/php.ini:/usr/local/etc/php/php.ini
+            - ./mnt/apache2/conf-enabled/vhosts.conf:/etc/apache2/conf-enabled/vhosts.conf
+            - ./mnt/apache2/vhosts/:/etc/apache2/vhosts/
         ports:
             - ${WEB_PORT}:80
         restart: ${WEB_RESTART}

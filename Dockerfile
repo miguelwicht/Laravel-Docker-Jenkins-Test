@@ -11,13 +11,9 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Copy virtual host
-COPY ["misc/apache/vhosts/000-default.conf", "misc/apache/vhosts/default-ssl.conf", "/etc/apache2/sites-available/"]
-
-RUN a2ensite 000-default \
-    && a2ensite default-ssl \
-    && a2enmod rewrite
-
-# Create directory for apache logs
+# Create directory for apache logs and vhosts and disable default vhosts
 RUN mkdir /var/www/logs \
-    && chown www-data:www-data /var/www/logs
+    && chown www-data:www-data /var/www/logs \
+    && mkdir -p /etc/apache2/vhosts \
+    && a2dissite 000-default \
+    && a2dissite default-ssl
