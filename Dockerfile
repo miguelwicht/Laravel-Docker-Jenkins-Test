@@ -12,8 +12,10 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Create directory for apache logs and vhosts and disable default vhosts
+# and active mod_rewrite
 RUN mkdir /var/www/logs \
     && chown www-data:www-data /var/www/logs \
     && mkdir -p /etc/apache2/vhosts \
     && a2dissite 000-default \
-    && a2dissite default-ssl
+    && a2dissite default-ssl \
+    && a2enmod rewrite
