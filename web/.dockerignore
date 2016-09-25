@@ -1,0 +1,12 @@
+**/.DS_Store
+**/.git
+**/.gitattributes
+**/.gitignore
+html/.env
+html/storage/app/apps/*
+html/storage/framework/cache/*
+html/storage/framework/sessions/*
+html/storage/framework/views/*
+html/storage/logs/*
+html/storage/oauth-private.key
+html/storage/oauth-public.key
