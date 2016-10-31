@@ -37,9 +37,9 @@ php.ini settings can be overwritten in ```/web/php.ini```. The container has to 
 ### Use case Laravel
 
 #### Setup Laravel
-Download composer.phar and install Laravel into web/html.
+Use ```_utils/install_laravel.sh``` to install Laravel. This will download composer, delete the contents in ```web/html``` and then install Laravel there. It will also make a copy of the created storage directory in ```_data/web/```.
 
-Copy the ```storage``` directory to ```_data/web/storage``` and make sure everything is writable by www-data. The .env files (```.env.dev``` and ```.env.prod```) should also be placed in ```_data/web```.
+Place your .env files (```.env.dev``` and ```.env.prod```) in ```_data/web``` so that they can be mounted.
 
 ```
 # Add the following volumes to docker-compose.dev.yml
