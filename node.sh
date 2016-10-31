@@ -1,5 +1,3 @@
 #!/bin/bash
 
-cd src
-
-docker run --rm -v "$(pwd)":"/app" -w="/app" node $1
+docker run --rm -v "$(pwd)/web/html":"/app" -w="/app" node $1

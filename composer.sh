@@ -1,5 +1,3 @@
 #!/bin/bash
 
-cd src
-
-docker run --rm -v "$(pwd)":/app composer/composer:php5 $1
+docker run --rm -v "$(pwd)/web/html":/app composer/composer:php5 $1
