@@ -1,8 +1,57 @@
 # Docker-Web-Template
 
-Simple template for an Apache, PHP, mysql setup. Mounts mysql data directory and apache log files for persistence and easy access.
+Simple template for an Apache, PHP, mysql setup. Mounts mysql data directory for persistence and easy access. Includes script for image exports that can be imported in production.
 
-## How to use
+## Project Structure
+
+- \_data/
+- \_export/ (created if needed)
+- web/
+- docker-compose.dev.yml
+- docker-compose.prod.yml
+- docker-compose.yml
+- makefile
+
+## Installation
+
+### makefile
+
+The first thing we need to do is to setup the PROJECT_NAME and the IMAGE_NAME in the makefile. Change it to something that makes sense and that let's you easily identify your docker image later on. The PROJECT_NAME will be used for the filename when you export an image.
+
+### .env and .env.prod
+
+To prevent files with sensitiv information from being commited to version control these file are not inluded and are even ignored in ```.gitignore```. There is an .env.example at the root directory of the project though that can be used as a template. Copy the file and change the default values where appropriate.
+
+### docker-compose.yml
+
+There are multiple docker-compose.yml files: a base file, one for development and one for production. The one for development and production are mainly used to configure different volume mounts. In development for example the ```web/html``` directory is mounted into the container so that code changes can take effect without having to export a new image or restart the container.
+
+### The \_data directory
+
+This directory will be used to store data that should persist the container life-cycle. Databases and user created files are a good example.
+Directories in ```_data``` should match the services in docker-compose.yml.
+
+### Custom php.ini settings
+php.ini settings can be overwritten in ```/web/php.ini```. The container has to be rebuild for this to take effect.
+
+### Use case Laravel
+
+#### Setup Laravel
+Download composer.phar and install Laravel into web/html.
+
+Copy the ```storage``` directory to ```_data/web/storage``` and make sure everything is writable by www-data. The .env files (```.env.dev``` and ```.env.prod```) should also be placed in ```_data/web```.
+
+```
+# Add the following volumes to docker-compose.dev.yml
+- ./_data/web/storage:/var/www/html/storage
+- ./_data/web/.env.dev:/var/www/html/.env
+
+# Add the following volumes to docker-compose.prod.yml
+- ../_data/web/storage:/var/www/html/storage
+- ../_data/web/.env.prod:/var/www/html/.env
+```
+
+### General use case
 
 - Copy your project files into ```/web/html```
 - Change the Virtual Hosts in ```/web``` to fit your needs
@@ -12,8 +61,21 @@ Simple template for an Apache, PHP, mysql setup. Mounts mysql data directory and
 - Change ```IMAGE_NAME``` and ```PROJECT_NAME``` in ```makefile```
 - run ```make up```
 
-### Custom php.ini settings
-php.ini settings can be overwritten in ```/web/php.ini```. The container has to be rebuild for this to take effect.
+### Export
+
+Use ```make export``` to prepare a new image for deployment. The script will rebuild the web image and create a compressed archive that can be imported on the production system. It will also create a makefile that can be used to get everything running on the production system.
+
+## Deprecated
+
+For convenience you can use the composer.sh and node.sh scripts. Just make sure they are executable.
+
+```
+# composer.sh
+./composer.sh "create-project --prefer-dist laravel/laravel ."
+
+# node.sh
+./node.sh "npm install"
+```
 
 ### Composer and NPM
 
@@ -33,32 +95,4 @@ docker run --rm -v "$(pwd):/app" composer/composer:php5 create-project --prefer-
 # NPM and Gulp
 docker run --rm -v "$(pwd)/web/html:/app" -w="/app" node npm install
 docker run --rm -v "$(pwd)/web/html:/app" -w="/app" node node_modules/.bin/gulp
-```
-
-For convenience you can use the composer.sh and node.sh scripts. Just make sure they are executable.
-
-```
-# composer.sh
-./composer.sh "create-project --prefer-dist laravel/laravel ."
-
-# node.sh
-./node.sh "npm install"
-```
-
-### Export
-
-Use ```make export``` to prepare a new image for deployment. The script will rebuild the web image and create a compressed archive that can be imported on the production system. It will also create a makefile that can be used to get everything running on the production system.
-
-### Laravel
-
-Move the ```storage``` directory to ```_data/web/storage``` and make sure everything is writable by www-data. The .env files (```.env.dev``` and ```.env.prod```) should also be placed in ```_data/web```.
-
-```
-# Add the following volumes to docker-compose.dev.yml
-- ./_data/web/storage:/var/www/html/storage
-- ./_data/web/.env.dev:/var/www/html/.env
-
-# Add the following volumes to docker-compose.prod.yml
-- ../_data/web/storage:/var/www/html/storage
-- ../_data/web/.env.prod:/var/www/html/.env
 ```
