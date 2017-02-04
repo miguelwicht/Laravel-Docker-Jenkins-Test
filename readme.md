@@ -50,7 +50,7 @@ Place your production .env file in ```_data/web``` so that it can be mounted.
 
 ### General use case
 
-- Copy your project files into ```/web/html```
+- Copy your project files into ```/web/src```
 - Change the Virtual Hosts in ```/web``` to fit your needs
 - Rename ```.env.example``` to ```.env```
 - Change the mysql password and database in ```.env```
@@ -62,32 +62,27 @@ Place your production .env file in ```_data/web``` so that it can be mounted.
 
 Use ```make export``` to prepare a new image for deployment. The script will rebuild the web image and create a compressed archive that can be imported on the production system. It will also create a makefile that can be used to get everything running on the production system.
 
-## Deprecated
-
-For convenience you can use the node.sh scripts. Just make sure they are executable.
-
-```
-# node.sh
-./node.sh "npm install"
-```
+### Composer and node.js
 
 ### Node.js
-
-Node.js is not included in this image but you can use the official image.
-
-```
-# Change into the src directory (all other commands are called from there!)
-cd src/
-
-# NPM and Gulp
-docker run --rm -v "$(pwd)/web/src:/app" -w="/app" node npm install
-docker run --rm -v "$(pwd)/web/src:/app" -w="/app" node node_modules/.bin/gulp
-```
-
-### Composer
 
 Composer can be installed with the install_composer.sh script from within the web container.
 
 ```
 php /var/www/_utils/composer.phar install
+```
+
+For convenience you can use the node.sh script. Just make sure they are executable.
+
+```
+# install packages
+./node.sh "npm install"
+
+# run gulp
+./node.sh "node_modules/.bin/gulp"
+
+# run webpack (laravel)
+./node.sh "npm run dev"
+./node.sh "npm run production"
+./node.sh "npm run watch"
 ```
