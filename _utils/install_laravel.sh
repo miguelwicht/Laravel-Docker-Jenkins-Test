@@ -13,27 +13,21 @@ prompt_confirm() {
 	done
 }
 
-# Prompt the user if he really wants to execute this script as it will delete everything in ../web/html/
-prompt_confirm "Do you want to continue? This will delete all files in ../web/html!" || exit 0
+# Prompt the user if he really wants to execute this script as it will delete everything in /var/www/html/
+prompt_confirm "Do you want to continue? This will delete all files in /var/www/html!" || exit 0
 
 cd "$DIR"
 
 # Get Composer
-php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-php -r "if (hash_file('SHA384', 'composer-setup.php') === 'e115a8dc7871f15d853148a7fbac7da27d6c0030b848d9b3dc09e2a0388afed865e6a3d6b3c0fad45c48e2b5fc1196ae') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
-php composer-setup.php
-php -r "unlink('composer-setup.php');"
+/bin/bash install_composer.sh
 
 # Remove default stuff in web/html
-rm -rf ../web/html/*
-rm -rf ../web/html/.[!.]*
-rm -rf ../web/html/..?*
+rm -rf /var/www/html/*
+rm -rf /var/www/html/.[!.]*
+rm -rf /var/www/html/..?*
 
 # install laravel
-php composer.phar create-project --prefer-dist laravel/laravel ../web/html
+php composer.phar create-project --prefer-dist laravel/laravel /var/www/html/
 
 # Move composer into ../web/html so that we can use it when we connect to the container
-mv composer.phar ../web/html/composer.phar
-
-# Make a copy of the storage directory that will be mounted into the container
-cp -a ../web/html/storage ../_data/web/
+mv composer.phar /var/www/html/composer.phar
