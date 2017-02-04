@@ -1,13 +1,14 @@
 # Docker-Web-Template
 
-Simple template for an Apache, PHP, mysql setup. Mounts mysql data directory for persistence and easy access. Includes script for image exports that can be imported in production.
+Simple template for an Apache, PHP, MySQL setup. Includes script for image exports that can be imported in production.
 
 ## Project Structure
 
 - \_data/
+- \_utils/
 - \_export/ (created if needed)
 - web/
-- docker-compose.dev.yml
+- docker-compose.override.yml
 - docker-compose.prod.yml
 - docker-compose.yml
 - makefile
@@ -37,15 +38,11 @@ php.ini settings can be overwritten in ```/web/php.ini```. The container has to 
 ### Use case Laravel
 
 #### Setup Laravel
-Use ```_utils/install_laravel.sh``` to install Laravel. This will download composer, delete the contents in ```web/html``` and then install Laravel there. It will also make a copy of the created storage directory in ```_data/web/```.
+Use ```_utils/install_laravel.sh``` to install Laravel. This will download composer, delete the contents in ```web/html``` and then install Laravel there. The script has to be run from within the container so log into the container with ```docker exec``` and run the script from there. The script is mounted at ```/var/www/_utils/```.
 
-Place your .env files (```.env.dev``` and ```.env.prod```) in ```_data/web``` so that they can be mounted.
+Place your production .env file in ```_data/web``` so that it can be mounted.
 
 ```
-# Add the following volumes to docker-compose.dev.yml
-- ./_data/web/storage:/var/www/html/storage
-- ./_data/web/.env.dev:/var/www/html/.env
-
 # Add the following volumes to docker-compose.prod.yml
 - ../_data/web/storage:/var/www/html/storage
 - ../_data/web/.env.prod:/var/www/html/.env
@@ -67,32 +64,30 @@ Use ```make export``` to prepare a new image for deployment. The script will reb
 
 ## Deprecated
 
-For convenience you can use the composer.sh and node.sh scripts. Just make sure they are executable.
+For convenience you can use the node.sh scripts. Just make sure they are executable.
 
 ```
-# composer.sh
-./composer.sh "create-project --prefer-dist laravel/laravel ."
-
 # node.sh
 ./node.sh "npm install"
 ```
 
-### Composer and NPM
+### Node.js
 
-Composer and npm are not included in this image but you can use the official images.
+Node.js is not included in this image but you can use the official image.
 
 ```
 # Change into the src directory (all other commands are called from there!)
 cd src/
 
-# Composer
-docker run --rm -v "$(pwd):/app" composer/composer:php5 composer-command-to-run
-
-## Laravel installation as an example (installs laravel in the current folder)
-rm -rf .gitkeep
-docker run --rm -v "$(pwd):/app" composer/composer:php5 create-project --prefer-dist laravel/laravel .
-
 # NPM and Gulp
-docker run --rm -v "$(pwd)/web/html:/app" -w="/app" node npm install
-docker run --rm -v "$(pwd)/web/html:/app" -w="/app" node node_modules/.bin/gulp
+docker run --rm -v "$(pwd)/web/src:/app" -w="/app" node npm install
+docker run --rm -v "$(pwd)/web/src:/app" -w="/app" node node_modules/.bin/gulp
+```
+
+### Composer
+
+Composer can be installed with the install_composer.sh script from within the web container.
+
+```
+php /var/www/_utils/composer.phar install
 ```
