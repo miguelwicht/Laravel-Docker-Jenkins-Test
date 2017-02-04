@@ -1,5 +1,11 @@
 #!/bin/bash
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+cd "$DIR"
+
+cd ..
+
 PROJECT_NAME=$1
 IMAGE_NAME=$2
 RELEASE_REFERENCE=$(git log -1 --pretty=oneline | sed -E "s/^([^[:space:]]+).*/\1/" 2>&1)
@@ -64,10 +70,10 @@ chmod +x create_symlinks.sh
 
 # Go back to web
 cd ../../web/
-#docker build -t ${IMAGE_NAME}:${RELEASE_REFERENCE} .
+docker build -t ${IMAGE_NAME}:${RELEASE_REFERENCE} .
 
 cd ../${EXPORT_PATH}
 
-#docker save ${IMAGE_NAME}:${RELEASE_REFERENCE} | gzip > ${EXPORT_IMAGE_NAME}
+docker save ${IMAGE_NAME}:${RELEASE_REFERENCE} | gzip > ${EXPORT_IMAGE_NAME}
 
 echo "Created Image: ${IMAGE_NAME}:${RELEASE_REFERENCE}. Exported as ${EXPORT_IMAGE_NAME}."

@@ -2,22 +2,33 @@ version: '2'
 
 services:
     web:
-        image: ${WEB_IMAGE}
         depends_on:
-            - mysql
-        links:
             - mysql
         ports:
             - ${WEB_PORT}:80
+        networks:
+            - network
         restart: ${WEB_RESTART}
 
     mysql:
-        image: mysql:5.6
+        image: mysql:5.7.17
         environment:
-              MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-              MYSQL_DATABASE: ${MYSQL_DATABASE}
-              MYSQL_USER: ${MYSQL_USER}
-              MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        volumes:
+            - mysql:/var/lib/mysql
         ports:
             - ${MYSQL_PORT}:3306
+        networks:
+            - network
         restart: ${MYSQL_RESTART}
+
+networks:
+    network:
+        driver: bridge
+
+volumes:
+    mysql:
+        driver: local
