@@ -5,13 +5,46 @@ Simple template for an Apache, PHP, MySQL setup. Includes script for image expor
 ## Project Structure
 
 - \_data/
-- \_utils/
 - \_export/ (created if needed)
+- \_helpers/
+- \_utils/
 - web/
 - docker-compose.override.yml
 - docker-compose.prod.yml
 - docker-compose.yml
 - makefile
+
+### The ```_*``` directories
+
+These directories can include scripts and mount points. The ```_``` is used to differentiate the directories from services.
+
+#### The ```_data``` directory
+
+This directory will be used to store data that should persist the container life-cycle. Databases and user created files are a good example.
+Directories in ```_data``` should match the services in docker-compose.yml.
+
+#### The ```_helpers``` directory
+
+This directory includes scripts that can be run from the host machine.
+
+#### The ```_utils``` directory
+
+This directory includes scripts that can be run form within the web container. In a development environment it is mounted to ```/var/www/_utils```.
+
+### Service directories
+
+Directories that are not prefixed with a ```_``` should only be used to represent a service from ```docker-compose.yml```. This allows each service to have a different dockerfile and build context as well as a standardized location for config files.
+
+```
+# Service directory structure
+service/
+  |- src/ # services source
+    |- # services source code e.g. laravel app
+  |- .dockerignore
+  |- dockerfile
+  |- dockerfile-dev
+  |- # other config files
+```
 
 ## Installation
 
@@ -27,10 +60,6 @@ To prevent files with sensitiv information from being commited to version contro
 
 There are multiple docker-compose.yml files: a base file, one for development and one for production. The one for development and production are mainly used to configure different volume mounts. In development for example the ```web/html``` directory is mounted into the container so that code changes can take effect without having to export a new image or restart the container.
 
-### The \_data directory
-
-This directory will be used to store data that should persist the container life-cycle. Databases and user created files are a good example.
-Directories in ```_data``` should match the services in docker-compose.yml.
 
 ### Custom php.ini settings
 php.ini settings can be overwritten in ```/web/php.ini```. The container has to be rebuild for this to take effect.
@@ -76,13 +105,13 @@ For convenience you can use the node.sh script. Just make sure they are executab
 
 ```
 # install packages
-./node.sh "npm install"
+_helpers/node.sh "npm install"
 
 # run gulp
-./node.sh "node_modules/.bin/gulp"
+_helpers/node.sh "node_modules/.bin/gulp"
 
 # run webpack (laravel)
-./node.sh "npm run dev"
-./node.sh "npm run production"
-./node.sh "npm run watch"
+_helpers/node.sh "npm run dev"
+_helpers/node.sh "npm run production"
+_helpers/node.sh "npm run watch"
 ```

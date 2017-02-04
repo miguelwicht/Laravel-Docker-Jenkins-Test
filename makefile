@@ -25,5 +25,5 @@ export:
 	@if [ "${PROJECT_NAME}" = "PROJECT-NAME" ] || [ "${IMAGE_NAME}" = "USERNAME/IMAGE" ]; then\
 		echo "Change the project and image names";\
 	else\
-		./create_deployment.sh "$(PROJECT_NAME)" "$(IMAGE_NAME)";\
+		./_helpers/create_deployment.sh "$(PROJECT_NAME)" "$(IMAGE_NAME)";\
 	fi
