@@ -1,0 +1,10 @@
+version: '2'
+
+services:
+    web:
+        build:
+            context: ./web
+            dockerfile: Dockerfile-dev
+        volumes:
+            - ./web/src:/var/www/html
+            - ./_utils:/var/www/_utils

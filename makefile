@@ -4,7 +4,7 @@ IMAGE_NAME := "USERNAME/IMAGE"
 
 # Docker-Compose commands
 up:
-	@docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+	@docker-compose up -d
 stop:
 	@docker-compose stop
 build:
