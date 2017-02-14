@@ -5,6 +5,6 @@ node('Docker-Jenkins-Slave') {
         sh "echo 'hello world'"
     }
     stage('build') {
-        sh "docker run --rm -u 1000:1000 -v jenkins_jenkins-slave:'/app'' -w='/app/jenkins/workspace/Laravel-Docker-Jenkins-Test/web/src' node npm install"
+        sh "docker run --rm -u 1000:1000 -v jenkins_jenkins-slave:\"/app\" -w=\"/app/jenkins/workspace/Laravel-Docker-Jenkins-Test/web/src\" node npm install"
     }
 }
