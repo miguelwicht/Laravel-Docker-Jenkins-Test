@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-node('Label Docker-Jenkins-Slave') {
+node('Docker-Jenkins-Slave') {
     stage('say-hello') {
         sh "echo 'hello world'"
     }
