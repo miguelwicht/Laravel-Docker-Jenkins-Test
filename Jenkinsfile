@@ -14,6 +14,9 @@ node('Docker-Jenkins-Slave') {
         sh "cd web && docker build -t ${env.JOB_NAME.toLowerCase()}:${gitCommit}-${env.BUILD_NUMBER} . && cd .."
     }
     stage('deployment') {
-        sh "docker tag ${env.JOB_NAME.toLowerCase()}:${gitCommit}-${env.BUILD_NUMBER} ${env.registry}/${env.JOB_NAME.toLowerCase()}:${gitCommit}-${env.BUILD_NUMBER}"
+        deploymentImageName = "${env.registry}/${env.JOB_NAME.toLowerCase()}:${gitCommit}-${env.BUILD_NUMBER}"
+        imageName = "${env.JOB_NAME.toLowerCase()}:${gitCommit}-${env.BUILD_NUMBER}"
+        sh "docker tag ${imageName} ${deploymentImageName}"
+        sh "docker push ${deploymentImageName}"
     }
 }
