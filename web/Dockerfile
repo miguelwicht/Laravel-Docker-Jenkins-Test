@@ -21,3 +21,4 @@ COPY default-ssl.conf /etc/apache2/sites-available/default-ssl.conf
 
 # This is only used to package production code
 COPY src /var/www/html
+RUN chown -R www-data:www-data /var/www/html
