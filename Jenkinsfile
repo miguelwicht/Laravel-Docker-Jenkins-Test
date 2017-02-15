@@ -12,7 +12,7 @@ node('Docker-Jenkins-Slave') {
     }
 
     stage('testing') {
-        sh "docker run --rm -v dockerjenkins_jenkins-slave:\"/app\" -w=\"/app/jenkins/workspace/${env.JOB_NAME}/web/src\" ${env.JOB_NAME.toLowerCase()}-web-dev /bin/bash -c \"cp .env.example .env; php artisan key:generate; vendor/bin/phpunit; rm -rf .env\""
+        sh "docker run --rm -v dockerjenkins_jenkins-slave:\"/app\" -w=\"/app/jenkins/workspace/${env.JOB_NAME}/web/src\" ${env.JOB_NAME.toLowerCase()}-web-dev /bin/bash -c \"cp .env.example .env; php artisan key:generate; vendor/bin/phpunit --debug; rm -rf .env\""
     }
 
     stage('deployment') {
