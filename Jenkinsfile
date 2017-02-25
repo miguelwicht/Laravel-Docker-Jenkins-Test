@@ -3,17 +3,25 @@
 node('docker') {
     stage('build-images') {
         checkout scm
-        sh "cd web && docker build -t ${env.JOB_NAME.toLowerCase()}-web-dev -f Dockerfile-dev ."
+        step('Build base image for testing') {
+            sh "cd web && docker build -t ${env.JOB_NAME.toLowerCase()}-web-dev -f Dockerfile-dev ."
+        }
     }
     stage('install-dependencies') {
         
         parallel (
             composer: {
-                sh "docker run --rm -v s3jenkinsagent_jenkins-slave-data:\"/app\" -w=\"/app/jenkins/workspace/${env.JOB_NAME}/web/src\" ${env.JOB_NAME.toLowerCase()}-web-dev /bin/bash -c \"php composer.phar install; chown -R 1000:1000 /app/jenkins/workspace/${env.JOB_NAME}/web/src/vendor\""
+                step('Install compose dependencies') {
+                    sh "docker run --rm -v s3jenkinsagent_jenkins-slave-data:\"/app\" -w=\"/app/jenkins/workspace/${env.JOB_NAME}/web/src\" ${env.JOB_NAME.toLowerCase()}-web-dev /bin/bash -c \"php composer.phar install; chown -R 1000:1000 /app/jenkins/workspace/${env.JOB_NAME}/web/src/vendor\""
+                }
             },
             npm: {
-                sh "docker run --rm -v s3jenkinsagent_jenkins-slave-data:\"/app\" -w=\"/app/jenkins/workspace/${env.JOB_NAME}/web/src\" node /bin/bash -c \"npm install; chown -R 1000:1000 /app/jenkins/workspace/${env.JOB_NAME}/web/src/node_modules\""
-                sh "docker run --rm -v s3jenkinsagent_jenkins-slave-data:\"/app\" -w=\"/app/jenkins/workspace/${env.JOB_NAME}/web/src\" node /bin/bash -c \"npm run dev\""
+                step('Install npm dependencies') 
+                    sh "docker run --rm -v s3jenkinsagent_jenkins-slave-data:\"/app\" -w=\"/app/jenkins/workspace/${env.JOB_NAME}/web/src\" node /bin/bash -c \"npm install; chown -R 1000:1000 /app/jenkins/workspace/${env.JOB_NAME}/web/src/node_modules\""
+                }
+                step('Build assets') {
+                    sh "docker run --rm -v s3jenkinsagent_jenkins-slave-data:\"/app\" -w=\"/app/jenkins/workspace/${env.JOB_NAME}/web/src\" node /bin/bash -c \"npm run dev\""
+                }
             }
         )
     }
