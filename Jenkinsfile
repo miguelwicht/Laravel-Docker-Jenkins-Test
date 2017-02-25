@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-node('Docker-Jenkins-Slave') {
+node('docker') {
     stage('build-images') {
         checkout scm
         sh "cd web && docker build -t ${env.JOB_NAME.toLowerCase()}-web-dev -f Dockerfile-dev ."
