@@ -16,7 +16,7 @@ node('docker') {
                 }
             },
             npm: {
-                step('Install npm dependencies') {
+                step('Install npm dependencies') 
                     sh "docker run --rm -v s3jenkinsagent_jenkins-slave-data:\"/app\" -w=\"/app/jenkins/workspace/${env.JOB_NAME}/web/src\" node /bin/bash -c \"npm install; chown -R 1000:1000 /app/jenkins/workspace/${env.JOB_NAME}/web/src/node_modules\""
                 }
                 step('Build assets') {
