@@ -15,12 +15,12 @@ node('Docker-Jenkins-Slave') {
         sh "docker run --rm -v dockerjenkins_jenkins-slave:\"/app\" -w=\"/app/jenkins/workspace/${env.JOB_NAME}/web/src\" ${env.JOB_NAME.toLowerCase()}-web-dev /bin/bash -c \"cp .env.example .env; php artisan key:generate; vendor/bin/phpunit --debug; rm -rf .env\""
     }
 
-    stage('deployment') {
-        gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
-        sh "cd web && docker build -t ${env.JOB_NAME.toLowerCase()}:${gitCommit}-${env.BUILD_NUMBER} . && cd .."
-        deploymentImageName = "${env.registry}/${env.JOB_NAME.toLowerCase()}:${gitCommit}-${env.BUILD_NUMBER}"
-        imageName = "${env.JOB_NAME.toLowerCase()}:${gitCommit}-${env.BUILD_NUMBER}"
-        sh "docker tag ${imageName} ${deploymentImageName}"
-        sh "docker push ${deploymentImageName}"
-    }
+    // stage('deployment') {
+    //     gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
+    //     sh "cd web && docker build -t ${env.JOB_NAME.toLowerCase()}:${gitCommit}-${env.BUILD_NUMBER} . && cd .."
+    //     deploymentImageName = "${env.registry}/${env.JOB_NAME.toLowerCase()}:${gitCommit}-${env.BUILD_NUMBER}"
+    //     imageName = "${env.JOB_NAME.toLowerCase()}:${gitCommit}-${env.BUILD_NUMBER}"
+    //     sh "docker tag ${imageName} ${deploymentImageName}"
+    //     sh "docker push ${deploymentImageName}"
+    // }
 }
