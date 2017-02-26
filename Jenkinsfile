@@ -5,6 +5,19 @@ node('docker') {
         checkout scm
         sh "cd web && docker build -t ${env.JOB_NAME.toLowerCase()}-web-dev -f Dockerfile-dev ."
     }
+
+    stage('get-secret-file') {
+        withCredentials([[
+            $class: 'FileBinding',
+            credentialsId: 'laravel-jenkins-test-env-docker-compose-staging',
+            variable: 'DOCKER_COMPOSE_ENV_FILE'
+        ]]) {
+
+            sh 'cp $DOCKER_COMPOSE_ENV_FILE .env'
+            sh 'cat .env'
+        }
+    }
+
     stage('install-dependencies') {
         
         parallel (
@@ -42,10 +55,10 @@ node('docker') {
         withCredentials([[
             $class: 'FileBinding',
             credentialsId: 'laravel-jenkins-test-env-docker-compose-staging',
-            variable: 'DOCKER-COMPOSE_ENV_FILE'
+            variable: 'DOCKER_COMPOSE_ENV_FILE'
         ]]) {
 
-            sh 'cp $DOCKER-COMPOSE_ENV_FILE .env'
+            sh 'cp $DOCKER_COMPOSE_ENV_FILE .env'
             sh 'cat .env'
         }
     }
