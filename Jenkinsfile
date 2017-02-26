@@ -37,4 +37,16 @@ node('docker') {
 
         sh "docker logout ${env.registry}"
     }
+
+    stage('get-secret-file') {
+        withCredentials([[
+            $class: 'FileBinding',
+            credentialsId: 'laravel-jenkins-test-env-docker-compose-staging',
+            variable: 'DOCKER-COMPOSE_ENV_FILE'
+        ]]) {
+
+            sh 'cp $DOCKER-COMPOSE_ENV_FILE .env'
+            sh 'cat .env'
+        }
+    }
 }
